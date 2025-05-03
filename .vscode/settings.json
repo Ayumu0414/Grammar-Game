@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+    "**/.gitignore": true,
+    "**/eslint.config.mjs": true,
+    "**/next-env.d.ts": true,
+    "**/next.config.ts": true,
+    "**/package-lock.json": true,
+    "**/package.json": true,
+    "**/README.md": true,
+    "**/tsconfig.json": true
+    }
+}
