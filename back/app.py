@@ -173,34 +173,47 @@ def generate_comments():
         return jsonify({"error": "sentenceが必要です"}), 400
 
     prompt = f"""
-以下の文章に対して、5人のキャラクターが一言コメントします。(なるべく短く。)
-完全になりきってください。
-悪ガキ：悪ガキっぽく、辛口コメントで。
-天然：可愛い女の子でふわふわした感じ。絵文字も付けて可愛く！
-中二病：中二病オーラ全開で。
-女子高校生：絵文字、顔文字、「笑」とかつける。
+以下の文章に対して、4人のキャラクターが一言コメントします。
+出力形式は以下に厳密に従ってください（JSON形式）
+以下の形式を厳密に守ってください。JSON配列の文字列として出力してください。Pythonのjson.loadsでパースできる形式にしてください。
+
+[
+    {{ "name": "男の子", "image": "/image/元気な男の子.png", "text": "コメント内容" }},
+    {{ "name": "天然", "image": "/image/天然な女の子.png", "text": "コメント内容" }},
+    {{ "name": "中二病", "image": "/image/中二病.png", "text": "コメント内容" }},
+    {{ "name": "女子高校生", "image": "/image/女子高校生.png", "text": "コメント内容" }}
+]
 
 文：{sentence}
-
-【出力形式】
-悪ガキ：「コメント」
-天然：「コメント」
-中二病：「コメント」
-女子高校生：「コメント」
 """
-
+    
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[{ "role": "user", "content": prompt }],
             temperature=1.2,
         )
-        result = response.choices[0].message.content
-        return jsonify({ "comment": result })
+        result_text = response.choices[0].message.content
+        print("GPTの出力:", result_text)
+        
+        import json, re
+        json_str = re.search(r"\[.*\]", result_text, re.DOTALL)
+        parsed = json.loads(json_str.group()) if json_str else []
+
+        return jsonify({ "comments": parsed })
 
     except Exception as e:
-        print("🔴 OpenAI API エラー:", e)
-        return jsonify({ "error": str(e) }), 500
+        print("GPT出力異常:", e)
+    return jsonify({
+        "comments": [
+            {
+                "name": "男の子",
+                "image": "/image/元気な男の子.png",
+                "text": "コメントの生成に失敗しちゃった！"
+            }
+        ]
+    }), 200
+
 
 # 最後に起動
 if __name__ == "__main__":
