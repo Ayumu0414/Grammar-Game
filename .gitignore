@@ -1,0 +1,26 @@
+# 共通
+.DS_Store
+*.log
+*.env
+*.db
+*.sqlite3
+*.pyc
+__pycache__/
+*.exe
+
+# VSCode
+.vscode/
+
+# Frontend (Next.js)
+front/node_modules/
+front/.next/
+front/out/
+front/dist/
+front/.env*
+front/package-lock.json
+
+# Backend (Python)
+back/venv/
+back/__pycache__/
+back/.env
+back/*.db
