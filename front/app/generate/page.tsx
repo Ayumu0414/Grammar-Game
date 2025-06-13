@@ -22,6 +22,7 @@ export default function GeneratePage() {
   const router = useRouter();
 
   // タイピングエフェクト
+  //コメントのテキストを1文字ずつ40ms間隔で表示したい
   useEffect(() => {
     if (comments.length === 0 || currentIndex >= comments.length) return;
 
@@ -44,6 +45,7 @@ export default function GeneratePage() {
     return () => clearInterval(interval);
   }, [comments, currentIndex]);
 
+  //現在のcharIndexまでの文字列だけをtypedTextに入れる
   useEffect(() => {
     if (comments.length === 0 || currentIndex >= comments.length) return;
     const fullText = comments[currentIndex].text;
@@ -93,6 +95,7 @@ export default function GeneratePage() {
     setLoading(false);
   };
 
+//コメントの次へボタンの処理
   const handleNext = () => {
     if (currentIndex < comments.length - 1) {
       setCurrentIndex((prev) => prev + 1);
